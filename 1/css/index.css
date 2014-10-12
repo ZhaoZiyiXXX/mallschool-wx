@@ -1,0 +1,29 @@
+@CHARSET "UTF-8";
+.mbookinbox{
+	border: 1px solid #ccc;
+	padding:10px;
+	margin:-1px 0px;
+}
+.flagsold{
+	min-width: 100px;
+	min-height:30px;
+	margin-top:30px;
+}
+
+.pic {
+	width: 60px;
+	height:80px;
+	margin-bottom: 5px;
+}
+.search_now_price {
+	font-family: arial,'Hiragino Sans GB',"Simsun";
+	color: #FA5000;
+	font-size: 12px;
+	overflow: hidden;
+	font-weight: bold;
+	margin-right: 10px;
+}
+
+.search_book_author{
+	font-size:11px;
+}

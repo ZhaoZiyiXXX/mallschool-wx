@@ -1,0 +1,55 @@
+{
+    "button": [
+        {
+            "name": "买", 
+            "sub_button": [
+                {
+                    "type": "view", 
+                    "name": "自 己 搜", 
+                    "url":"http://1.mallschoolwx.sinaapp.com/pages/buybook1.php"
+                }, 
+                {
+                    "type":"view",
+					"name":"打 包 买",
+					"url":"http://www.baidu.com/"
+                }
+            ]
+        }, 
+        {
+            "name": "卖", 
+            "sub_button": [ 
+                {
+                    "type":"click",
+					"name":"我的书籍",
+					"key":"MY_BOOK_INFO"
+                },
+				{
+                    "type": "scancode_waitmsg", 
+                    "name": "扫码发布", 
+                    "key": "rselfmenu_0_1", 
+                    "sub_button": [ ]
+                }
+            ]
+        }, 
+        {
+            "name": "我", 
+            "sub_button": [
+                {
+                    "type": "click", 
+                    "name": "个人信息", 
+                    "key":"USER_INFO"
+                }, 
+                {
+                    "type":"view",
+					"name":"意见反馈",
+					"url":"http://www.baidu.com/"
+                },
+				{
+                    "type":"view",
+					"name":"关于我们",
+					"url":"http://www.baidu.com/"
+                }
+            ]
+        }
+    ]
+}
