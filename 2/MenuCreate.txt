@@ -1,0 +1,60 @@
+{
+    "button": [
+        {
+            "name": "买", 
+            "sub_button": [
+                {
+                    "type": "view", 
+                    "name": "我要买书", 
+                    "url":"http://2.mallschoolwx.sinaapp.com/pages/buybook1.php"
+                }, 
+                {
+                    "type":"view",
+					"name":"使用帮助",
+					"url":"http://2.mallschoolwx.sinaapp.com/pages/buyer_readme.php"
+                }
+            ]
+        }, 
+        {
+            "name": "卖", 
+            "sub_button": [ 
+                {
+                    "type":"click",
+					"name":"我的书籍",
+					"key":"MY_BOOK_INFO"
+                },
+				{
+                    "type": "scancode_waitmsg", 
+                    "name": "扫码发布", 
+                    "key": "rselfmenu_0_1", 
+                    "sub_button": [ ]
+                },
+                {
+                    "type":"view",
+					"name":"使用帮助",
+					"url":"http://2.mallschoolwx.sinaapp.com/pages/seller_readme.php"
+                }
+            ]
+        }, 
+        {
+            "name": "我", 
+            "sub_button": [
+                {
+                    "type": "click", 
+                    "name": "个人信息", 
+                    "key":"USER_INFO"
+                }, 
+                {
+                    "type":"view",
+					"name":"意见反馈",
+					"url":"http://2.mallschoolwx.sinaapp.com/pages/yijian.php"
+                },
+				{
+                    "type":"view",
+					"name":"关于我们",
+					"url":"http://mp.weixin.qq.com/s?__biz=MzAwNjA2NTY0MQ==&mid=200677399&idx=1&sn=15042cafd615acf36cc99d0bc4ee54f2#rd"
+                }
+            ]
+        }
+    ]
+}

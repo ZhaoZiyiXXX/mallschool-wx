@@ -18,6 +18,10 @@
     
     <link rel="stylesheet" href="../src/bootstrap.min.css">
     <link rel="stylesheet" href="../src/buybook.css">
+        
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
     <script>
         $(document).ready(function(){
             $("#unsaled").click(function(){
@@ -32,11 +36,29 @@
             
 			$("#submit").click(function(){
                 if(!$("#price1").val()){
-                    alert("请输入价格");
+                    $("#dialogprice").dialog({
+                        resizable: false,
+                        height:150,
+                        modal: true,
+                        buttons: {
+                            "OK": function() {
+                                $( this ).dialog( "close" );
+                            }
+                        }
+                    });
                     return;
                 }
                 if(isNaN($("#price1").val())){
-                    alert("请输入有效数字");
+                    $("#dialognumber").dialog({
+                        resizable: false,
+                        height:150,
+                        modal: true,
+                        buttons: {
+                            "OK": function() {
+                                $( this ).dialog( "close" );
+                            }
+                        }
+                    });
                     return;
                 }
                 
@@ -49,10 +71,28 @@
 				},
 				function(data,status){
                     if(0 == data.result){
-                        alert("修改成功");
-						WeixinJSBridge.call('closeWindow');
+                        $("#dialog").dialog({
+                            resizable: false,
+                            height:150,
+                            modal: true,
+                            buttons: {
+                                "OK": function() {
+                                    $( this ).dialog( "close" );
+                                    WeixinJSBridge.call('closeWindow');
+                                }
+                            }
+                        });
                     }else{
-                        alert("修改失败");
+                         $("#dialogerror").dialog({
+                             resizable: false,
+                             height:150,
+                             modal: true,
+                             buttons: {
+                                 "OK": function() {
+                                     $( this ).dialog( "close" );
+                                 }
+                             }
+                         });
                     }
                 });
 			});
@@ -146,5 +186,17 @@ else{
             </div>
         </div>
 	</div>
+      <div id="dialog" style="display:none;">
+        <p>修改成功！</p>
+    </div>
+    <div id="dialogerror" style="display:none;">
+        <p>修改失败！请在网络良好的状态重试</p>
+    </div>
+    <div id="dialogprice" style="display:none;">
+        <p>请输入价格</p>
+    </div>
+    <div id="dialognumber" style="display:none;">
+        <p>请输入有效数字</p>
+    </div>
 </body>
 </html>

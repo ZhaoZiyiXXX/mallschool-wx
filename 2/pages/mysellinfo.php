@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
-    <title>喵校园-我要买书</title>
+    <title>喵校园-我的书籍</title>
 
     <!-- Bootstrap -->
 	<link href="../src/bootstrap.min.css" rel="stylesheet">
@@ -23,45 +23,31 @@
     <script src="../src/bootstrap.min.js"></script>
     <script type="text/javascript" src="../src/baiduTemplate.js"></script>
  <script>
- $(document).ready(function(){
-     $.get("http://api.jige.olege.com/sells?type=latest&count=4",
-           {
-               dataType : "json",
-           },
-           function(data,status){
-               var bt=baidu.template;
-               var html=bt('t:search_result',data);
-               document.getElementById('result').innerHTML=html;
-           });
-     
-	$("#submit").click(function(){
-
-			$.get("http://api.jige.olege.com/sells",
-			{
-				q:$("#search").val().replace(/ /g,"#"),
-			    dataType : "json",
-			},
-			function(data,status){
-                if(undefined == data.data[0]){
-                	alert("没有搜索到相关出售信息");
-                    return;
-                }
-				var bt=baidu.template;
-				var html=bt('t:search_result',data);
-				document.getElementById('result').innerHTML=html;
-			});
-	});
-});
+     $(document).ready(function(){
+         $.get("http://api.jige.olege.com/wsells?openid="+$("#openid").val(),
+               {
+                   dataType : "json",
+               },
+               function(data,status){
+                   var bt=baidu.template;
+                   var html=bt('t:search_result',data);
+                   document.getElementById('result').innerHTML=html;
+               });
+     });
 </script>
+<?php
+if(empty($_GET["openid"])){
+	$openid = "";
+}else{
+	$openid = $_GET["openid"];
+}
+?>
 </head>
 <body>
     <div class="container-fluid">
     <div class="row">
         <div style="margin-top: 40px;margin-left:10px;margin-right:10px;">
-		    <div class="input-group">
-		      <input type="text" class="form-control" id="search">
-                <span class="input-group-btn"> <button id="submit" type="button" class="btn btn-default">搜索</button></span>
-		    </div><!-- /input-group -->
+            <input id="openid" type="hidden" value="<?php echo $openid ?>">
 			<div class="bookbox" id="result">
 
 			</div>
@@ -79,8 +65,8 @@
 							<span ><%=data[i].name%></span>
 						</p>
 						<p class="search_book_author" > 
-							<span class="search_now_price">￥<%=data[i].price%></span>
-                        	<span class="search_pre_price">￥<%=data[i].fixedprice%></span>
+							<span class="search_now_price">&yen;<%=data[i].price%></span>
+                        	<span class="search_pre_price">&yen;<%=data[i].fixedPrice%></span>
                         	<span class="search_discount">(<%=data[i].off%>折)</span>
                         </p>
                         <p class="search_book_author">
@@ -91,15 +77,17 @@
 						</p>
 					</div>
 					<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                    	<p class="seller_title">卖家信息</p>
-                    	<p class="seller_campus" > 
+                    	<p class="seller_contact" > 
                         	<span>校区：</span><br/>
 							<span><%=data[i].college%></span>
 						</p>
                         <p class="seller_contact" > 
                         	<span>联系方式：</span><br/>
-							<a> <%=data[i].contact%></a>
+							<span><%=data[i].contact%></span>
 						</p>
+                        <p>
+                        	<a href="managesellinfo.php?openid=<%=data[i].openid%>&sellinfoid=<%=data[i].sellinfoid%>" class="btn btn-default">点击修改</a>
+        				</p>
         			</div>
 				</div>
 <%}%>

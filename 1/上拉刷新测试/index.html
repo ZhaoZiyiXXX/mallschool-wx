@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <title>喵校园-我要买书</title>
+
+    <!-- Bootstrap -->
+	<link href="../src/bootstrap.min.css" rel="stylesheet">
+    <link href="../src/buybook.css" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="http://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	
+	
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="../src/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../src/bootstrap.min.js"></script>
+ <script>
+ $(document).ready(function(){
+     //设置get、post方式为同步，为了准确记录已获取的数量
+      $.ajaxSetup({ 
+         async: false 
+     }); 
+     var count1 = 10;//首次加载个数.也是当前已经加载个数的计数器
+     var count2 = 4;//每次上拉加载的个数
+     $.get("handle.php",
+           {
+               type :"latest",
+               start : "0",
+               count : count1,
+               dataType : "json",
+           },
+           function(data,status){
+				document.getElementById('result').innerHTML = "";
+               data = JSON.parse(data);
+               var i ;
+               for(i = 0;i<data.length;i++){
+                   $("#result").append("<p>" + data[i].value + "</p>");
+               }
+           });
+     
+     //增加记录个数函数，直接写在回调函数中无效
+     function SetCount(count){
+         count1 = count1 + count;
+     }
+     $(window).bind("scroll", 
+                    function (event) 
+                    { 
+                        var flag = 0;//正在获取ajax数据标记，避免重复请求
+                        //滚动条到网页头部的 高度，兼容ie,ff,chrome 
+                        var top = document.documentElement.scrollTop + document.body.scrollTop; 
+                        //网页的高度 
+                        var textheight = $(document).height(); 
+                        // 网页高度-top-当前窗口高度 
+                        var tmpheight = textheight - top - $(window).height();
+                        //20就是距离页面底端的距离，相当于拉到里页面结束还有20px的时候触发加载动作
+                        if (tmpheight < 20) { 
+                            if( 0 == flag){
+                                flag = 1;
+                                $.get("handle.php",
+                                      {
+                                          type :"latest",
+                                          start : count1,
+                                          count : count2,
+                                          dataType : "json",
+                                      },
+                                      function(data,status){
+                                          flag = 0;
+                                          data = JSON.parse(data);
+                                          var i ;
+                                          for(i = 0;i<data.length;i++){
+                                              $("#result").append("<p>" + data[i].value + "</p>");
+                                          }
+                                          SetCount(data.length);
+                                      });
+                            }
+                        }
+                    });
+});
+</script>
+</head>
+<body>
+    <div class="container-fluid">
+    <div class="row">
+        <div style="margin-left:10px;margin-right:10px;">
+            <div style="height:40px;text-align:center">
+            </div>
+		    <div class="input-group">
+		      <input type="text" class="form-control" id="search">
+                <span class="input-group-btn"> <button id="submit" type="button" class="btn btn-default">搜索</button></span>
+		    </div>
+			<div class="bookbox" name="result" id="result">
+
+			</div>
+            <!-- 这里需要改成如果后续还有数据就显示正在加载，没有数据显示成已经加载完毕。是否还有数据需要再api层加一个标志，前台js解析 -->
+            <div style="height:50px;text-align:center;padding:10px">
+            	<p>正在为您加载更多内容...</p>
+            </div>
+		  </div>
+    </div>	
+</body>
+</html>

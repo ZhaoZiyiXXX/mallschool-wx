@@ -24,12 +24,13 @@
         $data['type'] = "new";
         $data['nickname'] = $this->getUserInfo();
         //$this->Log($data['openid'] . ' : ' . $data['type'] . ' : ' . $data['nickname']);
+        sae_debug($this->getOpenid());
         $this->curl_post($url, $data);
         //$this->responseText("欢迎关注喵校园");
         $items = array(
-            new NewsResponseItem('欢迎关注喵校园，专业的二手书交易平台', '', 'http://1.mallschoolwx.sinaapp.com/source/logo.png', ''),
-            new NewsResponseItem('【买家指南】', '', 'http://1.mallschoolwx.sinaapp.com/source/sellbook.png', 'http://1.mallschoolwx.sinaapp.com/pages/buyer_readme.php'),
-            new NewsResponseItem('【卖家指南】', '', 'http://1.mallschoolwx.sinaapp.com/source/buybook.png', 'http://1.mallschoolwx.sinaapp.com/pages/seller_readme.php'),
+            new NewsResponseItem('欢迎关注喵校园，专业的二手书交易平台', '', $this->root_url.'source/logo.png', ''),
+            new NewsResponseItem('【买家指南】', '', $this->root_url.'source/sellbook.png', $this->root_url.'pages/buyer_readme.php'),
+            new NewsResponseItem('【卖家指南】', '', $this->root_url.'source/buybook.png', $this->root_url.'pages/seller_readme.php'),
         );
         $this->responseNews($items);
     }
@@ -54,12 +55,12 @@
         $html = file_get_contents($url);
 		$obj = json_decode($html);
         if (empty($obj->{'data'}->{'college'}) || empty($obj->{'data'}->{'campus'})) {
-            $url='<a href="http://1.mallschoolwx.sinaapp.com/pages/userinfo.php?openid=' . $this->getOpenid() . '">请先点击补全校区信息</a>';
+            $url='<a href='.$this->root_url.'pages/userinfo.php?openid=' . $this->getOpenid() . '">请先点击补全校区信息</a>';
             $this->responseText($url);
             return false;
         }
         if (empty($obj->{'data'}->{'tel'})) {
-            $url='<a href="http://1.mallschoolwx.sinaapp.com/pages/userinfo.php?openid=' . $this->getOpenid() . '">请先点击补全联系信息</a>';
+            $url='<a href='.$this->root_url.'pages/userinfo.php?openid=' . $this->getOpenid() . '">请先点击补全联系信息</a>';
             $this->responseText($url);
             return false;
         }
@@ -85,11 +86,11 @@
 			$html = file_get_contents($url);
 			$obj = json_decode($html);
 			if('{"result":0,"data":{"result":0}}' == $html){
-                $url = "亲爱的同学：\n 您要出售的这本书有些特别，可否帮我我们补全一下图书信息？/::*\n <a href='http://1.mallschoolwx.sinaapp.com/pages/newbook.php'>点击此处提交图书信息</a>";
+                $url = "亲爱的同学：\n 您要出售的这本书有些特别，可否帮我我们补全一下图书信息？/::*\n <a href=$this->root_url.'pages/newbook.php'>点击此处提交图书信息</a>";
 				$this->responseText($url);
 			}
 			else{
-                $tmpresponse = "亲爱的同学/::) \n您即将出售一本《" . $obj->{"data"}->{"name"} . "》 \n <a href=\"http://1.mallschoolwx.sinaapp.com/pages/sellbook.php?isbn=" . $tmparray[1] . 
+                $tmpresponse = "亲爱的同学/::) \n您即将出售一本《" . $obj->{"data"}->{"name"} . "》 \n <a href=\"".$this->root_url."pages/sellbook.php?isbn=" . $tmparray[1] . 
                     "&name="   . $obj->{"data"}->{"name"} . 
                     "&author=" . $obj->{"data"}->{"author"} . 
                     "&press="  . $obj->{"data"}->{"press"} .
@@ -105,11 +106,11 @@
 			$html = file_get_contents($url);
 			$obj = json_decode($html);
 			if('{"result":0,"data":{"result":0}}' == $html){
-                $url = "亲爱的同学：\n 您要出售的这本书有些特别，可否帮我我们补全一下图书信息？/::*\n <a href='http://1.mallschoolwx.sinaapp.com/pages/newbook.php'>点击此处提交图书信息</a>";
+                $url = "亲爱的同学：\n 您要出售的这本书有些特别，可否帮我我们补全一下图书信息？/::*\n <a href='".$this->root_url."pages/newbook.php'>点击此处提交图书信息</a>";
 				$this->responseText($url);
 			}
 			else{
-                $tmpresponse = "亲爱的同学/::) \n您即将出售一本《" . $obj->{"data"}->{"name"} . "》 \n <a href=\"http://1.mallschoolwx.sinaapp.com/pages/sellbook.php?isbn=" . $tmparray[0] . 
+                $tmpresponse = "亲爱的同学/::) \n您即将出售一本《" . $obj->{"data"}->{"name"} . "》 \n <a href=\"".$this->root_url."pages/sellbook.php?isbn=" . $tmparray[0] . 
                     "&name="   . $obj->{"data"}->{"name"} . 
                     "&author=" . $obj->{"data"}->{"author"} . 
                     "&press="  . $obj->{"data"}->{"press"} .
@@ -147,7 +148,7 @@
                                       "【学校】：" . $obj->{"data"}->{"college"} . "\n" . 
                                       "【校区】：" . $obj->{"data"}->{"campus"} . "\n" . 
                                       "【电话】：" . $obj->{"data"}->{"tel"} . "\n" .
-                                      '<a href="http://1.mallschoolwx.sinaapp.com/pages/userinfo.php?openid=' . $this->getOpenid() . '">点击修改个人信息</a>');
+                                      '<a href="'.$this->root_url.'pages/userinfo.php?openid=' . $this->getOpenid() . '">点击修改个人信息</a>');
               }
           } else if ($event_key == 'MY_BOOK_INFO') {
               $url='http://api.jige.olege.com/wsells?openid=' . $this->getOpenid();
@@ -174,7 +175,7 @@
                   
                   $this->responseText("您当前的在售图书信息：\n" . 
                                       $book_info .
-                                      '<a href="http://1.mallschoolwx.sinaapp.com/pages/mysellinfo.php?openid=' . $this->getOpenid() . '">点击查看详细信息</a>');
+                                      '<a href="'.$this->root_url.'pages/mysellinfo.php?openid=' . $this->getOpenid() . '">点击查看详细信息</a>');
                   //$this->responseText($obj->{"data"}[0]->{"name"});
               }
           }
@@ -325,7 +326,7 @@
           //$this->responseText( "\ue415" );
           
           // jqmobile网页测试
-          $this->responseText("<a href='http://1.mallschoolwx.sinaapp.com/jqmobile_test/userinfo.php?openid=". $this->getOpenid() ."'>测试链接</a>");
+          $this->responseText("<a href=".$this->root_url."jqmobile_test/userinfo.php'>测试链接</a>");
 
       }
       

@@ -24,18 +24,25 @@
     <script type="text/javascript" src="../src/baiduTemplate.js"></script>
  <script>
  $(document).ready(function(){
-     $.get("http://api.jige.olege.com/sells?type=latest&count=4",
-           {
-               dataType : "json",
-           },
-           function(data,status){
-               var bt=baidu.template;
-               var html=bt('t:search_result',data);
-               document.getElementById('result').innerHTML=html;
-           });
+     var count1 = 10;//首次加载个数.也是当前已经加载个数的计数器
+     var count2 = 4;//每次上拉加载的个数
+	 $.ajax({
+         type: "GET",
+         url: "http://api.jige.olege.com/sells?",
+         data: {
+             type="latest",
+             start : "0",
+             count=count1,
+             },
+         dataType: "json",
+         success: function(data){
+        	 var bt=baidu.template;
+             var html=bt('t:search_result',data);
+             document.getElementById('result').innerHTML=html;
+         }
+     });
      
 	$("#submit").click(function(){
-
 			$.get("http://api.jige.olege.com/sells",
 			{
 				q:$("#search").val().replace(/ /g,"#"),
@@ -43,7 +50,16 @@
 			},
 			function(data,status){
                 if(undefined == data.data[0]){
-                	alert("没有搜索到相关出售信息");
+                    $("#dialog").dialog({
+                        resizable: false,
+                        height:150,
+                        modal: true,
+                        buttons: {
+                            "OK": function() {
+                                $( this ).dialog( "close" );
+                            }
+                        }
+                    });
                     return;
                 }
 				var bt=baidu.template;
@@ -66,6 +82,9 @@
 
 			</div>
 		  </div><!-- /.col-lg-6 -->
+		  <div id="below" style="height:50px;text-align:center;padding:10px">
+            	<p>正在为您加载更多内容...</p>
+            </div>
     </div>	
 <script id='t:search_result' type="text/template">
 <!-- 模板部分 -->
@@ -105,5 +124,10 @@
 <%}%>
 <!-- 模板结束 -->   
 </script>
+
+        </div>
+            <div id="dialog" style="display:none;">
+            <p>没有搜索到相关出售信息</p>
+        </div>
 </body>
 </html>

@@ -15,6 +15,10 @@
 
 	<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
 	<script src="../src/bootstrap.min.js"></script>
+    
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
     <script>
         $(document).ready(function(){
             $.get("http://api.jige.olege.com/wuser?openid="+$("#openid").val(),
@@ -27,7 +31,6 @@
                       $("#campus").val(data.data.campus);
                       $("#tel").val(data.data.tel);
                   });
-            
             $("#submit").click(function(){
                 $.post("http://api.jige.olege.com/wuser",
                        {
@@ -41,10 +44,28 @@
                        },
                        function(data,status){
                            if(0 == data.result){
-                               alert("修改成功");
-                               WeixinJSBridge.call('closeWindow');
+                               $("#dialog").dialog({
+                                   resizable: false,
+                                   height:150,
+                                   modal: true,
+                                   buttons: {
+                                       "OK": function() {
+                                           $( this ).dialog( "close" );
+                                           WeixinJSBridge.call('closeWindow');
+                                       }
+                                   }
+                               });
                            }else{
-                               alert("修改失败");
+                               $("#dialogerror").dialog({
+                                   resizable: false,
+                                   height:150,
+                                   modal: true,
+                                   buttons: {
+                                       "OK": function() {
+                                           $( this ).dialog( "close" );
+                                       }
+                                   }
+                               });
                            }
                        });
             });
@@ -80,6 +101,12 @@ if(empty($_GET["openid"])){
 		  </div>
 		  <input type="hidden" id="openid" name="openid" value="<?php echo $openid ?>">
 		  <button id="submit" type="submit" class="btn btn-default">确认修改</button>
+        <div id="dialog" style="display:none;">
+            <p>成功！</p>
+        </div>
+        <div id="dialogerror" style="display:none;">
+            <p>修改失败！请在网络良好的状态重试</p>
+        </div>
 	</div>
 </body>
 </html>

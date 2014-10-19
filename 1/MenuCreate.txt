@@ -5,13 +5,13 @@
             "sub_button": [
                 {
                     "type": "view", 
-                    "name": "自 己 搜", 
+                    "name": "我要买书", 
                     "url":"http://1.mallschoolwx.sinaapp.com/pages/buybook1.php"
                 }, 
                 {
                     "type":"view",
-					"name":"打 包 买",
-					"url":"http://www.baidu.com/"
+					"name":"使用帮助",
+					"url":"http://1.mallschoolwx.sinaapp.com/pages/buyer_readme.php"
                 }
             ]
         }, 
@@ -28,6 +28,11 @@
                     "name": "扫码发布", 
                     "key": "rselfmenu_0_1", 
                     "sub_button": [ ]
+                },
+                {
+                    "type":"view",
+					"name":"使用帮助",
+					"url":"http://1.mallschoolwx.sinaapp.com/pages/seller_readme.php"
                 }
             ]
         }, 
@@ -42,12 +47,12 @@
                 {
                     "type":"view",
 					"name":"意见反馈",
-					"url":"http://www.baidu.com/"
+					"url":"http://1.mallschoolwx.sinaapp.com/pages/yijian.php"
                 },
 				{
                     "type":"view",
 					"name":"关于我们",
-					"url":"http://www.baidu.com/"
+					"url":"http://mp.weixin.qq.com/s?__biz=MzAwNjA2NTY0MQ==&mid=200677399&idx=1&sn=15042cafd615acf36cc99d0bc4ee54f2#rd"
                 }
             ]
         }
