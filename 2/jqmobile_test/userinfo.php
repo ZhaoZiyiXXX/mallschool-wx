@@ -19,7 +19,7 @@
                 alert("修改失败");
             }    
             $(document).ready(function(){
-                $.get("http://api.jige.olege.com/wuser?openid="+$("#openid").val(),
+                $.get($("#db_api_url").val()+"wuser?openid="+$("#openid").val(),
                       {
                           dataType : "json",
                       },
@@ -34,7 +34,7 @@
 
                     $.ajax({
                         type: "POST",
-                        url: "http://api.jige.olege.com/wuser",
+                        url: $("#db_api_url").val()+"wuser",
                         cache: false,
                         data: formData,
                         success: onSuccess,
@@ -50,7 +50,8 @@
         </script>
     </head>
     <?php 
-		$msg = "";
+		include('../config.php');
+        $msg = "";
         if(empty($_GET["openid"])){
             $openid = "";
         }else{
@@ -72,6 +73,7 @@
                         <input type="text" name="tel" id="tel">
  						<input type="hidden" id="openid" name="openid" value="<?php echo $openid ?>">
                         <input type="hidden" id="type" name="type" value="update">
+                        <input type="hidden" id="db_api_url" name="db_api_url" value="<?php echo constant('DB_API_URL') ?>">
                     </div>
                     <!-- <input id="submit" type="submit" data-inline="true" data-transition="slidedown" value="确认修改"> -->
                     <a href="#" id="submit" role="button" class="ui-shadow ui-btn ui-corner-all ui-btn-inline" data-transition="slidedown">确认修改</a>

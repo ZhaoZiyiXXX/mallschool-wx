@@ -2,21 +2,14 @@
 /**
  * 微信公众平台 PHP SDK
  *
- * @author NetPuter <netputer@gmail.com>
+ * 
  */
+include_once('../config.php');
 
 /**
    * 微信公众平台处理类
    */
 class Wechat {
-    
-    /**
-     * 调试模式，将错误通过文本消息回复显示
-     *
-     * @var boolean
-     */
-    private $debug;
-    
     /**
      * 以数组的形式保存微信服务器每次发来的请求
      *
@@ -26,23 +19,6 @@ class Wechat {
     
     public $kvdb;
     
-    /*正式帐号
-      private $appid = 'wxbe694e2d2a3e8bf7';
-      private $secret = '6698077cc0e529f5015bf8f8fe9f7f9d';
-      private $root_url = 'http://1.mallschoolwx.sinaapp.com/';
-	  */
-    
-    /*测试帐号*/
-    private $appid = 'wx93e6d64b31eba742';
-    private $secret = 'fa594b11c7652cda706c700eff625828';
-    public $root_url = 'http://2.mallschoolwx.sinaapp.com/';
-    
-    public function Log($content){
-        $mysql = new SaeMysql();
-        $sql = "INSERT  INTO `log` ( `id`, `time`, `content`) VALUES (null ,'" . time() . "' ,'".$content."') ";
-        $mysql->runSql($sql);
-        $mysql->closeDb();
-    }
     public function curl_post($url, $data) {
         $info = array ();
         $header = "Content-type: text/xml";
@@ -96,8 +72,8 @@ class Wechat {
     
     //自定义菜单中获取access_token
     private function get_access_token(){
-        $url="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".$this->appid."&secret=".$this->secret;
-        $json=$this->http_request_json($url);//这个地方不能用file_get_contents
+        $url="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" . APP_ID . "&secret=" . APP_SECRET;
+        $json=$this->http_request_json($url);//https的不能用file_get_contents
         $data=json_decode($json,true);
         if($data['access_token']){
             return $data['access_token'];
@@ -105,18 +81,7 @@ class Wechat {
             return "获取access_token错误";
         }		
     }
-    // 客服消息属于高级接口，目前不支持
-    public function postCustomMsg( $msg ) {
-        $url="https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=" . $this->getAccessToken();
-        $data = array();
-        //$content = array();
-        //$content['content'] = $msg;
-        $data['touser'] = $this->getOpenid();
-        $data['msgtype'] = "text";
-        $data['text[content]'] = $msg;
-        
-        return $this->curl_post_ssl( $url, $data );
-    }
+
     //因为url是https 所有请求不能用file_get_contents,用curl请求json 数据
     public function http_request_json($url){  
         $ch = curl_init();
@@ -179,13 +144,12 @@ class Wechat {
      * @param string $token 验证信息
      * @param boolean $debug 调试模式，默认为关闭
      */
-    public function __construct($token, $debug = FALSE) {
+    public function __construct($token) {
         if ($this->isValid() && $this->validateSignature($token)) {
             exit($_GET['echostr']);
         }
         
         // 设置错误处理函数，将错误通过文本消息回复显示
-        $this->debug = $debug;
         set_error_handler(array(&$this, 'errorHandler'));
         
         $xml = (array) simplexml_load_string($GLOBALS['HTTP_RAW_POST_DATA'], 'SimpleXMLElement', LIBXML_NOCDATA);
@@ -373,7 +337,7 @@ class Wechat {
                 break;
                 
                 case 'CLICK':
-                sae_debug("onClick Event");
+                //sae_debug("onClick Event");
                 $this->onClick($this->getRequest('EventKey'));
                 break;
                 
@@ -413,7 +377,7 @@ class Wechat {
      * @return void
      */
     protected function errorHandler($level, $msg, $file, $line) {
-        if ( ! $this->debug) {
+        if ( !DEBUG ) {
             return;
         }
         

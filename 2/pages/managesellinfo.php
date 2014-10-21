@@ -19,9 +19,8 @@
     <link rel="stylesheet" href="../src/bootstrap.min.css">
     <link rel="stylesheet" href="../src/buybook.css">
         
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
-    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-    <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="../src/jquery-ui.css">
+    <script src="../src/jquery-ui.js"></script>
     <script>
         $(document).ready(function(){
             $("#unsaled").click(function(){
@@ -62,7 +61,7 @@
                     return;
                 }
                 
-				$.post("http://api.jige.olege.com/wsell",
+				$.post($("#db_api_url").val()+"wsell",
 				{
                     type:"update",
                     sellinfoid:$("#sellinfoid").val(),
@@ -100,6 +99,7 @@
 	</script>
 </head>
 <?php
+include('../config.php');
 if(empty($_GET["sellinfoid"])){
 	echo "系统异常";
 	exit;
@@ -114,7 +114,7 @@ if(empty($_GET["openid"])){
 	$openid = $_GET["openid"];
 }
 
-$url='http://api.jige.olege.com/wsell?type=sellinfoid&sellinfoid='.$sellinfoid.'&openid='.$openid;
+$url=DB_API_URL . 'wsell?type=sellinfoid&sellinfoid='.$sellinfoid.'&openid='.$openid;
 $html = file_get_contents($url);
 $obj = json_decode($html);
 if('{"result":0,"data":{"result":0}}' == $html){
@@ -135,6 +135,7 @@ else{
     <div class="container-fluid">
     <div class="row" style="height:20px;">
     </div>
+        <input type="hidden" id="db_api_url" name="db_api_url" value="<?php echo constant('DB_API_URL') ?>">
 		<div class="row mbookinbox">
 			<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
 				<img src=<?php echo $imgpath?> alt="" class="pic" />

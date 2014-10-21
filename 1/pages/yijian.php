@@ -26,7 +26,7 @@
     <?php
     if(isset($_POST["content"])){
           $mysql = new SaeMysql();
-          $sql = "INSERT  INTO `yijian` ( `id`, `time`, `content`) VALUES (null ,'" . time() . "' ,'".$_POST["content"]."') ";
+          $sql = "INSERT  INTO `yijian` ( `id`, `time`, `content`,`status`) VALUES (null ,'" . time() . "' ,'".$_POST["content"]."','未处理') ";
           $mysql->runSql($sql);
           $mysql->closeDb();
         	echo "\n\n\n我们已经收到了您的反馈，感谢您对喵校园的关注！";

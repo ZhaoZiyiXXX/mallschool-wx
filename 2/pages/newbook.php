@@ -42,7 +42,7 @@
                     alert("价格必须为数字");
                     return;
                 }
-                $.post("http://api.jige.olege.com/book",
+                $.post($("#db_api_url").val()+"book",
                        {
                            isbn:$("#isbn").val(),
                            fixedPrice:$("#fixedPrice").val(),
@@ -63,8 +63,12 @@
         });
     </script>
 </head>
+    <?php 
+		include('../config.php');
+    ?>
     <body>
         <div class="container-fluid">
+            <input type="hidden" id="db_api_url" name="db_api_url" value="<?php echo constant('DB_API_URL') ?>">
             <br/>
             <div class="form-group">
                 <label for="name">书名</label>

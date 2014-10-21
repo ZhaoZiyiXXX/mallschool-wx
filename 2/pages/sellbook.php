@@ -18,9 +18,8 @@
 
     <link href="../src/buybook.css" rel="stylesheet">
         
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
-    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-    <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="../src/jquery-ui.css">
+    <script src="../src/jquery-ui.js"></script>
     <script>
          $(document).ready(function(){
 			$("#submit").click(function(){
@@ -51,7 +50,7 @@
                     return;
                 }
                 
-				$.post("http://api.jige.olege.com/wsell",
+				$.post($("#db_api_url").val()+"wsell",
 				{
                     book_id:$("#bookid").val(),
                     openid:$("#wxopenid").val(),
@@ -88,6 +87,7 @@
 	</script>
 </head>
 <?php
+include('../config.php');
 if(empty($_GET["bookid"])){
 echo "没有bookid，无法显示";
 	exit;
@@ -101,7 +101,7 @@ if(empty($_GET["openid"])){
 	$wxopenid = $_GET["openid"];
 }
 
-$url='http://api.jige.olege.com/book?type=id&q='.$bookid;
+$url=DB_API_URL . 'book?type=id&q='.$bookid;
 $html = file_get_contents($url);
 $obj = json_decode($html);
 if('{"result":0,"data":{"result":0}}' == $html){
@@ -121,6 +121,7 @@ else{
     <div class="container-fluid">
     <div class="row" style="height:20px;">
     </div>
+        <input type="hidden" id="db_api_url" name="db_api_url" value="<?php echo constant('DB_API_URL') ?>">
 		<div class="row mbookinbox">
 			<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
 				<img src=<?php echo $imgpath?> alt="" class="pic" />

@@ -24,7 +24,7 @@
     <script type="text/javascript" src="../src/baiduTemplate.js"></script>
  <script>
      $(document).ready(function(){
-         $.get("http://api.jige.olege.com/wsells?openid="+$("#openid").val(),
+         $.get($("#db_api_url").val()+"wsells?openid="+$("#openid").val(),
                {
                    dataType : "json",
                },
@@ -36,6 +36,7 @@
      });
 </script>
 <?php
+include('../config.php');
 if(empty($_GET["openid"])){
 	$openid = "";
 }else{
@@ -46,6 +47,7 @@ if(empty($_GET["openid"])){
 <body>
     <div class="container-fluid">
     <div class="row">
+        <input type="hidden" id="db_api_url" name="db_api_url" value="<?php echo constant('DB_API_URL') ?>">
         <div style="margin-top: 40px;margin-left:10px;margin-right:10px;">
             <input id="openid" type="hidden" value="<?php echo $openid ?>">
 			<div class="bookbox" id="result">

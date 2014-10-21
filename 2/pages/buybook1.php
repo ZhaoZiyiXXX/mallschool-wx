@@ -22,18 +22,15 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="../src/bootstrap.min.js"></script>
     <script type="text/javascript" src="../src/baiduTemplate.js"></script>
+    <link rel="stylesheet" href="../src/jquery-ui.css">
+    <script src="../src/jquery-ui.js"></script>
  <script>
  $(document).ready(function(){
-     var count1 = 10;//首次加载个数.也是当前已经加载个数的计数器
+     var count1 = 6;//首次加载个数.也是当前已经加载个数的计数器
      var count2 = 4;//每次上拉加载的个数
 	 $.ajax({
          type: "GET",
-         url: "http://api.jige.olege.com/sells?",
-         data: {
-             type="latest",
-             start : "0",
-             count=count1,
-             },
+         url: $("#db_api_url").val()+"sells?type=latest&start=0&count=" + count1.toString(),
          dataType: "json",
          success: function(data){
         	 var bt=baidu.template;
@@ -41,9 +38,46 @@
              document.getElementById('result').innerHTML=html;
          }
      });
+     //增加记录个数函数，直接写在回调函数中无效
+     function SetCount(count){
+         count1 = count1 + count;
+     }
      
+     $(window).bind("scroll", 
+                    function (event) 
+                    { 
+                        var flag = 0;//正在获取ajax数据标记，避免重复请求
+                        //滚动条到网页头部的 高度，兼容ie,ff,chrome 
+                        var top = document.documentElement.scrollTop + document.body.scrollTop; 
+                        //网页的高度 
+                        var textheight = $(document).height(); 
+                        // 网页高度-top-当前窗口高度 
+                        var tmpheight = textheight - top - $(window).height();
+                        //20就是距离页面底端的距离，相当于拉到里页面结束还有20px的时候触发加载动作
+                        if (tmpheight < 20) { 
+                            if( 0 == flag){
+                                flag = 1;
+                                $.ajax({
+                                    type: "GET",
+                                    url: $("#db_api_url").val()+"sells?type=latest&start="+count1.toString()+"&count=" + count2.toString(),
+                                    dataType: "json",
+                                    async:false,
+                                    success: function(data){
+                                        var bt=baidu.template;
+                                        var html=bt('t:search_result',data);
+                                        $("#result").append(html);
+                                        if(0 == data.data.length){
+                                            document.getElementById('below').innerHTML="<p>已经到底了</p>";
+                                        }else{
+                                            SetCount(data.data.length);
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
 	$("#submit").click(function(){
-			$.get("http://api.jige.olege.com/sells",
+			$.get($("#db_api_url").val()+"sells",
 			{
 				q:$("#search").val().replace(/ /g,"#"),
 			    dataType : "json",
@@ -70,9 +104,13 @@
 });
 </script>
 </head>
+    <?php 
+        include('../config.php');
+    ?>
 <body>
     <div class="container-fluid">
     <div class="row">
+        <input type="hidden" id="db_api_url" name="db_api_url" value="<?php echo constant('DB_API_URL') ?>">
         <div style="margin-top: 40px;margin-left:10px;margin-right:10px;">
 		    <div class="input-group">
 		      <input type="text" class="form-control" id="search">
